@@ -4,7 +4,7 @@ import treetaggerwrapper
 
 
 def models(user_input):
-    tagger = treetaggerwrapper.TreeTagger(TAGLANG='en', TAGDIR='tt/')
+    tagger = treetaggerwrapper.TreeTagger(TAGLANG='en', TAGDIR='ADWISER/website/tt/')
 
     def preprocessing(text):
         user_input = text
@@ -124,7 +124,7 @@ def models(user_input):
             if mis:
                 err = re.findall('<(.+?)\s...>', mis.group())
                 error = re.search(err[0] + '.*?' + err[-1], text).group()
-                sent.append([error, 'This might me an erroneous use of inversion'])
+                sent.append([error, 'Just a reminder that this type of expression requires inversion.'])
         return data
 
     def prepositions(data):
@@ -175,7 +175,7 @@ def models(user_input):
                         or re.search(trg3, text, flags=re.IGNORECASE)):
                     err = re.findall('<(.+?)\s...>', mis.group())
                     error = re.search(err[0] + '.*?' + err[-1], text).group()
-                    sent.append([error, 'You may have used the wrong form of the verb in the condition. See more examples at http://realec-reference.site/Conditionals'])
+                    sent.append([error, 'You may have used the wrong form of the verb in the condition.'])
         return data
 
     def barely(data):
@@ -418,8 +418,8 @@ def models(user_input):
         cth = '(<, PUN><that\s...>)<([^>]+)\s....?>'
         punc = '(?:<[^>]+\sPU.>)'
         sent_end = '(?:<[^>]+\sSENT>)'
-        rand_words_no_pun_not_obl = '(?:<[^>]+\s[^V][^U].>)*'
-        cif = '(<if\s...>)' + rand_words_no_pun_not_obl + '<[^>]+\sV..>' + rand_words_no_pun_not_obl + '(?:' + punc + '|' + sent_end + ')'
+        rand_words_no_pun_no_v_not_obl = '(?:<[^>]+\s[^V][^U].>)*'
+        cif = '(<if\s...>)' + rand_words_no_pun_no_v_not_obl + '<[^>]+\sV..>' + rand_words_no_pun_no_v_not_obl + '(?:' + punc + '|' + sent_end + ')'
 
         for sent in data:
             text = sent[0]
@@ -461,7 +461,7 @@ def models(user_input):
 
         rand_words_no_pun = '(?:<[^>]+\s.[^U].>)+'
 
-        rand_words_no_pun_not_obl = '(?:<[^>]+\s.[^U].>)*'
+        rand_words_no_pun_no_v_not_obl = '(?:<[^>]+\s[^V][^U].>)*'
 
         comma = '(?:<, PUN>)'
         punc = '(?:<[^>]+\sPU.>)'
@@ -469,7 +469,7 @@ def models(user_input):
 
         conj_that = '<that\s...><[^>]+\s....?>'
 
-        conj_if = '<if\s...>' + rand_words_no_pun_not_obl + '<[^>]+\sV..>' + rand_words_no_pun_not_obl + '(?:' + punc + '|' + sent_end + ')'
+        conj_if = '<if\s...>' + rand_words_no_pun_no_v_not_obl + '<[^>]+\sV..>' + rand_words_no_pun_no_v_not_obl + '(?:' + punc + '|' + sent_end + ')'
 
         conj = '(?:' + '(?:<what\s...>)' + '|' + '(?:<how\s...>)' + '|' + '(?:<why\s...>)' + \
                '|' + '(?:<where\s...>)' + '|' + '(?:<when\s...>)' + '|' + '(?:<whether\s...>)' + ')'
@@ -494,11 +494,21 @@ def models(user_input):
         res1 = r0 + r2 + comma + '(?:<that\s...>)'
 
         res_i = '(?:' + res0 + '|' + res1 + ')'
+
+        # think/thinks/thought/believe/believes/believed/
+        # suppose/supposes/supposed/assume/assumes/assumed/suggest/
+        # suggests/suggested/propose/ proposes/proposed
+
+        # verb2 = '(?:' + '(?:<think.?\s...>)' + '|' + '(?:<thought\s...>)' + '|' + '(?:<believe.?\s...>)' + '|' + '(?:<suppose.?\s...>)' +\
+        # '|' + '(?:<assume.?\s...>)' + '|' + '(?:<suggest.?\s...>)' + '|' + '(?:<suggested\s...>)' + '|' + '(?:<propose.?\s...>)' + ')'
+        # p0 = nounp() + verb2 + comma
+
+        # res_exp = '(?:' + res_i + '|' + main_clause_c + '|' + p0 + ')'
+
         pattern = '(?:' + res_i + '|' + main_clause_c + ')'
 
         recommend = 'You may have used a redundant comma in this sentence.'
         data_for_return = find_com_mistakes(data, pattern, recommend)
-
         return data_for_return
 
     def gerund(data):
@@ -520,8 +530,6 @@ def models(user_input):
                     if mis:
                         sent.append([pattern, 'This gerund needs direct object'])
         return data
-
-
 
     def output_maker(data):
         output = []

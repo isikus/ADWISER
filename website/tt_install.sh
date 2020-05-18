@@ -3,5 +3,6 @@ wget https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-l
 wget https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tagger-scripts.tar.gz
 wget https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/install-tagger.sh
 wget https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/english-bnc.par.gz
-sudo chmod 777 install-tagger.sh
+chmod +x install-tagger.sh
 ./install-tagger.sh
+cp ./tt/english.par ./tt/english-utf8.par

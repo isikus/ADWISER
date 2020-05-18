@@ -2,9 +2,9 @@
 
 # Set these paths appropriately
 
-BIN="/home/ivan/ADWISER/website/tt/bin"
-CMD="/home/ivan/ADWISER/website/tt/cmd"
-LIB="/home/ivan/ADWISER/website/tt/lib"
+BIN="/home/eershova/ADWISER/website/tt/bin"
+CMD="/home/eershova/ADWISER/website/tt/cmd"
+LIB="/home/eershova/ADWISER/website/tt/lib"
 
 GERMANTAGGER=${CMD}/tree-tagger-german
 TAGGER=${BIN}/tree-tagger
